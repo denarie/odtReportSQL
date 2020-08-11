@@ -160,9 +160,10 @@ public function saveODT($outputFile){
 			$this->content = $this->parseBlocks($this->content);
 			// for images: puts a place marker in manifest
 		    if ($this->hasimages) {  
-// print("images? yes");						
-			  $pos = strpos($this->manifest,'<manifest:file-entry manifest:media-type="image/');
-			 	$this->manifest = substr($this->manifest,0,$pos -1)."<!-- images -->\n". substr($this->manifest,$pos);				
+// print("images? yes");	
+		// SD: auskommentiert: sonst Ergebnis nicht kompatibel mit neueren OpenOffice Versionen (6.4.4.2 unter Ubuntu)					
+		//	  $pos = strpos($this->manifest,'<manifest:file-entry manifest:media-type="image/');
+		//	 	$this->manifest = substr($this->manifest,0,$pos -1)."<!-- images -->\n". substr($this->manifest,$pos);				
 			 }						   
   // builds root blocks			 
 			if(count($this->assigned_block)>0){
@@ -188,8 +189,9 @@ public function saveODT($outputFile){
 		
 // replace fields in all content and does template (not in block) image processing				
     	$this->content = $this->repaceFields($this->content, $this->assigned_field);	 // processes images					
-// replace fields for headers and footers			
-			$this->style = $this->replaceMacros($this->style);  // dont processes images
+// replace fields for headers and footers	
+			// SD: auskommentiert: sonst Ergebnis nicht kompatibel mit neueren OpenOffice Versionen (6.4.4.2 unter Ubuntu)							
+			// $this->style = $this->replaceMacros($this->style);  // dont processes images
 			}	// end if not processed  
 //  zips the outputFile			
 		$this->compact($outputFile);		  
@@ -410,7 +412,7 @@ function execInBackground($cmd) {
 		 * low-level: replaces one nested Block from $assigned_nested_block .	 
 		 * $values is an array of arrays fields/values: one array for block
 		 *	$parent like: array("members"=>1,"pets"=>1))  (starting from 1)
-		 * ver.02 : riscritta eliminando regex. Maggiore velocità
+		 * ver.02 : riscritta eliminando regex. Maggiore velocita
 		 */
       private function addNestedBlock($blockname,$values,$parent){
        $start = 0;
@@ -499,7 +501,7 @@ function execInBackground($cmd) {
 		  global $Translation;  
 		// Anonymizer
 			$meta = file_get_contents($this->tmpDir."/meta.xml");	   
-		     //  <dc:title>Idoneità - Allegato A</dc:title>
+		     //  <dc:title>Idoneita - Allegato A</dc:title>
          //  <meta:initial-creator>Marco Sillano</meta:initial-creator>
          //  <meta:creation-date>2011-11-05T14:05:00</meta:creation-date>
          //  <dc:date>2011-11-14T19:30:07.18</dc:date>
@@ -508,7 +510,8 @@ function execInBackground($cmd) {
 			$meta = preg_replace('`<meta:creation-date>.*</meta:creation-date>`','<meta:creation-date>'.date('Y-m-d\TH:i:s.00').'</meta:creation-date>',$meta);
 			$meta = preg_replace('`<dc:creator>.*</dc:creator>`',"<meta:creator>Odtphp ver.". __thisversion__."</meta:creator>",$meta);
 			$meta = preg_replace('`<dc:date>.*</dc:date>`','<dc:date>'.date('Y-m-d\TH:i:s.00').'</dc:date>',$meta);
-			file_put_contents($this->tmpDir."/meta.xml",$meta);
+		// SD: auskommentiert: sonst Ergebnis nicht kompatibel mit neueren OpenOffice Versionen (6.4.4.2 unter Ubuntu)					
+		//	file_put_contents($this->tmpDir."/meta.xml",$meta);
 		 //
 		 
 		}
