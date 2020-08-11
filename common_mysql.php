@@ -3,29 +3,26 @@
 // +++++++++  CHANGE HERE application globals:
 //	$weburl ='http://sillano.hopto.org:8880/bridge/'; // example: internet public using no_ip.org
 // 	$weburl ='http://192.168.1.55:88/www/bridge/' ;   // example: local net. wifi
-    $weburl ='http://localhost:88/bridge/';           // example: local server, debug
-  
+//    $weburl ='http://localhost:88/bridge/';           // example: local server, debug
+// 
 //  application password (difference between guest/user)	
-	  $appPass = '44b8e497c5f15d970d7346d39cd52a16';  // example: 'giobridge'  
+//	  $appPass = '44b8e497c5f15d970d7346d39cd52a16';  // example: 'giobridge'  
 // to change $appPass: 
 // echo	   md5(trim( 'the_password'));
-// ====================  GENERAL MYSQL (obsolete)
 /*
 Old version: no protection from 'injection attack' in user-defined values.
 */
-	
-// ====================  GENERAL MYSQL
+// implementation using mysql_xxxx 
+//  license LGPL 	
+// ====================  GENERAL MYSQL (obsolete)
  
 function sql($statment){
-
-	$dbServer   = 'localhost';       // default
-	$dbDatabase = 'bridge';          // default
-// +++++++++  CHANGE HERE MySql values:
-	$dbUsername = 'root';            // example: localhost debug
-	$dbPassword = '';		             // example: localhost debug
-//	$dbPassword = 'secret';        // example: production
+// print($statment.'<BR>');
 //====================================================    
 	static $connected=false;
+    // connection data
+  include(dirname(__FILE__)."/config.php");	
+
 	if(!$connected){
 		/****** Connect to MySQL ******/
 		if(!extension_loaded('mysql')){
@@ -54,7 +51,7 @@ function sql($statment){
 		}
 
 		$connected=true;
-	 }
+	 } // ends if not connected
 
 	if(!$result = @mysql_query($statment)){
 	    echo "<div class=Error>";
@@ -65,7 +62,8 @@ function sql($statment){
 
 	return $result;
 }
-	 
+
+// ================================== sql to arrays	 
  
 // return only a  value
 function sqlValue($query) {
@@ -86,7 +84,25 @@ function sqlArray($query) {
   return $dats;
 }
 			
+/*
+ *	low-level DB read using SQL.
+ *  return a rows array: array[] = (row(0), row(1), row(2)...)
+ *  note: in queries are allowed fields (#field#) replaced by actual values in $this->assigned_field
+ */
+ 
+function sqlArrayTot($query){	   
+	   $r=sql($query );			        
+	   $arrayData= array();
+     while ( $sub = mysql_fetch_array($r)) {	  
+					array_push($arrayData, $sub);  
+ 					}			
+     mysql_free_result ($r);          
+	   return $arrayData ;	   
+ }
+
+
 // return an array of values: array[key]=row[0]
+
 function sqlRecord($query) {
   $result =  sql($query);
   $dats =  mysql_fetch_array($result);
@@ -108,7 +124,7 @@ function sqlLookup($query) {
   return $dats;
 }    
  
-// per combo input, options da una query (id, value)
+// for combo input, options from a query (id, value)
 function optionsList($query, $selected = -1){     		
      $options = '';
      $ops = sqlLookup($query);    
