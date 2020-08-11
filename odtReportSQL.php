@@ -302,7 +302,7 @@ function doTestTemplate($reportName = NULL)
 
 function getReportMenu($page, $key1 = NULL, $key2 = NULL, $key3 = NULL, $key4 = NULL, $key5 = NULL)
 { 
-    $HTMLtemplate   = './templates/reportSQL.html';
+    $HTMLtemplate   = '/templates/reportSQL.html';
     $query0         = "SELECT * FROM odt_reports WHERE page = '$page' ORDER BY position";
     $HTMLfragment   = '';
     $allPageReports = sqlArrayTot($query0);
@@ -663,12 +663,16 @@ function modelFields($model, $key, $type, $value)
             $value = sqlLookup($value);
         } else
         //	list.@<path to file>	  	
-            if (file_exists(dirname(__FILE__) . '\\' . substr($value, 1))) {
+            if (file_exists(dirname(__FILE__) . '/' . substr($value, 1))) {
             $opzioni_data = addslashes(implode('', @file(dirname(__FILE__) . '/' . substr($value, 1))));
             $value        = explode(';;', $opzioni_data);
          // list.eval
-        } else if (!($value = eval($value))) {
-            return putError($model, $value, $key);
+        } else {
+            // print($value . '<BR>');
+            $value = eval($value);
+            if (!($value)) {
+                return putError($model, $value, $key);
+            }
         }
         // $value now is a lookup array		
         $new = '<select name="' . $key . "\">\n";
