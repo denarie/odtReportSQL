@@ -180,4 +180,3 @@ function movePage($num,$url){
    exit;
 }                            
 
-?>

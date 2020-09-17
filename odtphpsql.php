@@ -234,5 +234,3 @@ private function assignNestedBlockSQLrecursive($nestedBlockName, $query, $templa
    }			  
 }
  
-?>
-  

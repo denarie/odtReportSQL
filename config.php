@@ -4,4 +4,4 @@
    $dbUsername='root';	
    $dbPassword='';	
    $dbDatabase='odtphp';
-  ?>
+

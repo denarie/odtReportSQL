@@ -207,7 +207,7 @@ public function downloadODT($name = null){
 	    $tmp_filename = $this->tmpDir."/../".uniqid('', true).".odt";
 			if(is_null($name)){
 				$name = basename($tmp_filename,".odt");
-			}				  
+			}	
 			$this->saveODT($tmp_filename);			
 			$this->downloadFile($tmp_filename, $name.".odt");
 	}			  			 
@@ -583,6 +583,6 @@ function execInBackground($cmd) {
 		}			 		
 } 
 
-?>
+
 
 
